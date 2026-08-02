@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SkinIQ — A Trust-First Skin Health Advisor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="wordmark">Skin<span>IQ</span></div>
+  <div class="nav-links">
+    <a href="#workflow">How it works</a>
+    <a href="#trust">Why trust it</a>
+    <a href="app.html" class="cta-btn">Launch the app &rarr;</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-copy">
+    <span class="hero-eyebrow">Multi-agent skin health system</span>
+    <h1>Skincare guidance that <em>shows its work.</em></h1>
+    <p class="lede">
+      Four specialized AI agents — vision, ingredient reasoning, recommendation,
+      and symptom analysis — work together to help you understand your skin.
+      Every estimate comes with an honest confidence range, not a false promise.
+    </p>
+    <div class="hero-actions">
+      <a href="app.html" class="cta-btn">Launch the app &rarr;</a>
+      <a href="#workflow" class="secondary-link">See how it works</a>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="hero-ring"></div>
+    <div class="hero-ring r2"></div>
+    <div class="hero-ring r3"></div>
+    <div class="hero-stat s1"><span class="val">4</span>agents, one report</div>
+    <div class="hero-stat s2"><span class="val">28k</span>ingredients referenced</div>
+  </div>
+</section>
+
+<div class="trust-strip">
+  Every result is a recommendation, never a diagnosis — always framed with its own uncertainty.
+</div>
+
+<section class="workflow" id="workflow">
+  <div class="section-head">
+    <span class="eyebrow">How it works</span>
+    <h2>Four agents, working together</h2>
+    <p>Each step is handled by a purpose-built model, not one general-purpose AI guessing at everything. They share results and reason about them together.</p>
+  </div>
+  <div class="workflow-steps">
+    <div class="workflow-step">
+      <span class="num">01</span>
+      <h3>Scan your skin</h3>
+      <p>Upload a face photo. A vision model estimates tone, type, acne, and dark-circle likelihood — each with a real statistical confidence range.</p>
+    </div>
+    <div class="workflow-step">
+      <span class="num">02</span>
+      <h3>Scan a product</h3>
+      <p>Photograph an ingredients label. OCR reads it, then we cross-check every ingredient against a 28,000-name reference database.</p>
+    </div>
+    <div class="workflow-step">
+      <span class="num">03</span>
+      <h3>Get matched</h3>
+      <p>A content-based recommender suggests products for your profile — every suggestion comes with a plain-language reason, never a black box.</p>
+    </div>
+    <div class="workflow-step">
+      <span class="num">04</span>
+      <h3>Check a concern</h3>
+      <p>Describe a symptom in text — no photo needed, ever, so private areas can be discussed comfortably. Cross-referenced with weather and product history.</p>
+    </div>
+  </div>
+</section>
+
+<section class="trust-explain" id="trust">
+  <div class="trust-explain-inner">
+    <div class="trust-explain-copy">
+      <div class="section-head">
+        <span class="eyebrow">Why trust it</span>
+        <h2>We show our uncertainty, on purpose</h2>
+        <p>Most AI tools give you one confident-sounding number. SkinIQ tells you when it's actually sure — and when it isn't.</p>
+      </div>
+      <ul class="trust-points">
+        <li>Every prediction carries a statistically calibrated confidence range, not a made-up percentage.</li>
+        <li>When the model is unsure, you can self-report instead of trusting a shaky guess.</li>
+        <li>Every agent decision is logged to an auditable trail — nothing is a black box.</li>
+        <li>We never diagnose. Every result nudges toward a licensed dermatologist for anything that matters.</li>
+      </ul>
+    </div>
+    <div class="trust-explain-visual">
+      <div class="demo-band">
+        <div class="cb-label"><span>Skin tone estimate</span><span>4.4</span></div>
+        <div class="cb-track">
+          <div class="cb-range"></div>
+          <div class="cb-point"></div>
+        </div>
+      </div>
+      <p class="demo-band-caption">This is the actual UI element you'll see throughout the app — an estimate, shown honestly alongside its uncertainty.</p>
+    </div>
+  </div>
+</section>
+
+<section class="final-cta">
+  <h2>Ready to see what your skin's telling you?</h2>
+  <p>No sign-up needed for this demo. Your data stays local to this session.</p>
+  <a href="app.html" class="cta-btn">Launch the app &rarr;</a>
+</section>
+
+<footer class="site-footer">
+  <span>SkinIQ — a portfolio project demonstrating multi-agent ML systems.</span>
+  <span>Not a substitute for professional medical advice.</span>
+</footer>
+
+</body>
+</html>

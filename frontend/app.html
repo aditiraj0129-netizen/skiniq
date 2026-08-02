@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SkinIQ — App</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav class="site-nav">
+  <a href="index.html" class="wordmark" style="text-decoration:none;">Skin<span>IQ</span></a>
+  <div class="nav-links">
+    <a href="index.html">&larr; Back to overview</a>
+  </div>
+</nav>
+
+<div class="app-disclaimer-bar">
+  Every result here is a recommendation, not a diagnosis. Please verify with a licensed dermatologist.
+</div>
+
+<nav class="tabs">
+  <button class="tab active" data-tab="scan">01 &nbsp;Skin Scan</button>
+  <button class="tab" data-tab="product">02 &nbsp;Product Scan</button>
+  <button class="tab" data-tab="recommend">03 &nbsp;Recommendations</button>
+  <button class="tab" data-tab="symptom">04 &nbsp;Symptom Check</button>
+</nav>
+
+<main class="app-main">
+
+  <!-- SKIN SCAN -->
+  <section id="scan" class="panel active">
+    <div class="panel-head">
+      <span class="eyebrow">Vision Agent</span>
+      <h1>What does your skin look like today?</h1>
+      <p class="sub">Upload a clear, well-lit face photo. Our model estimates tone, type, and common concerns — every estimate comes with an honest confidence range.</p>
+    </div>
+
+    <div class="card">
+      <label class="dropzone" id="scanDropzone">
+        <input type="file" id="scanFile" accept="image/*" hidden>
+        <span class="dz-label">Click to choose a face photo</span>
+        <span class="dz-filename" id="scanFilename"></span>
+      </label>
+
+      <div class="self-report">
+        <div class="field">
+          <label>Self-reported tone (optional — used only if the model is unsure)</label>
+          <select id="toneCategory">
+            <option value="">— not specified —</option>
+            <option value="bright">Bright</option>
+            <option value="mid">Mid</option>
+            <option value="brown">Brown</option>
+            <option value="black">Black</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Self-reported skin type (optional)</label>
+          <select id="skinTypeSelfReport">
+            <option value="">— not specified —</option>
+            <option value="oily">Oily</option>
+            <option value="dry">Dry</option>
+            <option value="normal">Normal</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="primary-btn" id="scanSubmit">Analyze my skin</button>
+      <div class="status" id="scanStatus"></div>
+    </div>
+
+    <div class="results" id="scanResults"></div>
+  </section>
+
+  <!-- PRODUCT SCAN -->
+  <section id="product" class="panel">
+    <div class="panel-head">
+      <span class="eyebrow">OCR + Ingredient Agent</span>
+      <h1>What's actually in this product?</h1>
+      <p class="sub">Photograph the ingredients label. We read it, cross-check against a 28,000-name ingredient database, and flag anything worth knowing.</p>
+    </div>
+
+    <div class="card">
+      <label class="dropzone" id="productDropzone">
+        <input type="file" id="productFile" accept="image/*" hidden>
+        <span class="dz-label">Click to choose a label photo</span>
+        <span class="dz-filename" id="productFilename"></span>
+      </label>
+
+      <div class="field">
+        <label>Your skin type (optional — personalizes the risk flags)</label>
+        <select id="productSkinType">
+          <option value="">— not specified —</option>
+          <option value="oily">Oily</option>
+          <option value="dry">Dry</option>
+          <option value="normal">Normal</option>
+        </select>
+      </div>
+
+      <button class="primary-btn" id="productSubmit">Scan label</button>
+      <div class="status" id="productStatus"></div>
+    </div>
+
+    <div class="results" id="productResults"></div>
+  </section>
+
+  <!-- RECOMMENDATIONS -->
+  <section id="recommend" class="panel">
+    <div class="panel-head">
+      <span class="eyebrow">Recommendation Agent</span>
+      <h1>What should you actually use?</h1>
+      <p class="sub">Content-based matching — every suggestion comes with a plain-language reason, not a black-box score.</p>
+    </div>
+
+    <div class="card">
+      <div class="self-report">
+        <div class="field">
+          <label>Skin type</label>
+          <select id="recSkinType">
+            <option value="oily">Oily</option>
+            <option value="dry">Dry</option>
+            <option value="normal">Normal</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Acne concern level</label>
+          <input type="range" id="recAcne" min="0" max="1" step="0.1" value="0">
+          <span class="range-val" id="recAcneVal">0.0</span>
+        </div>
+        <div class="field">
+          <label>Dark circle concern level</label>
+          <input type="range" id="recDark" min="0" max="1" step="0.1" value="0">
+          <span class="range-val" id="recDarkVal">0.0</span>
+        </div>
+      </div>
+      <button class="primary-btn" id="recSubmit">Get recommendations</button>
+      <div class="status" id="recStatus"></div>
+    </div>
+
+    <div class="results" id="recResults"></div>
+  </section>
+
+  <!-- SYMPTOM CHECK -->
+  <section id="symptom" class="panel">
+    <div class="panel-head">
+      <span class="eyebrow">Symptom Agent</span>
+      <h1>Something feels off?</h1>
+      <p class="sub">Text only — no photo required, ever. Safe to describe concerns anywhere on the body, including private areas.</p>
+    </div>
+
+    <div class="card">
+      <div class="field">
+        <label>Where on the body?</label>
+        <input type="text" id="symBodyArea" placeholder="e.g. forearm, inner thigh, scalp">
+      </div>
+      <div class="field">
+        <label>How many days has this been going on?</label>
+        <input type="number" id="symDuration" min="0" value="1">
+      </div>
+      <div class="field">
+        <label>Describe what you're noticing</label>
+        <textarea id="symText" rows="3" placeholder="e.g. itchy red patches, started after using a new lotion"></textarea>
+      </div>
+      <div class="field">
+        <label>Severity (1 = mild, 5 = severe)</label>
+        <input type="range" id="symSeverity" min="1" max="5" step="1" value="2">
+        <span class="range-val" id="symSeverityVal">2</span>
+      </div>
+      <div class="field">
+        <label>Recent products used (comma-separated, optional)</label>
+        <input type="text" id="symProducts" placeholder="e.g. Nivea Shea Smooth Body Lotion">
+      </div>
+      <label class="checkbox-row">
+      <div class="field">
+        <label>Your skin type (optional — enables a proactive avoidance list)</label>
+        <select id="symSkinType">
+          <option value="">— not specified —</option>
+          <option value="oily">Oily</option>
+          <option value="dry">Dry</option>
+          <option value="normal">Normal</option>
+        </select>
+      </div>
+
+      <label class="checkbox-row">
+        <input type="checkbox" id="symUseLocation">
+        Use my location for weather/UV and local trend context (optional)
+      </label>
+
+      <label class="checkbox-row">
+        <input type="checkbox" id="symOtcAck">
+        I understand OTC suggestions are general education, not a prescription, and I'll confirm with a dermatologist/pharmacist before using anything
+      </label>
+
+      <button class="primary-btn" id="symSubmit">Get analysis</button>
+      <div class="status" id="symStatus"></div>
+    </div>
+
+    <div class="results" id="symResults"></div>
+
+    <div class="card" style="margin-top:28px;">
+      <h3 style="font-family:var(--font-display); font-size:18px; margin-top:0;">Check your recent products, one by one</h3>
+      <p class="sub" style="margin-bottom:18px;">Upload photos of products you've recently used. We'll scan each and flag anything that doesn't suit your skin type.</p>
+      <label class="dropzone" id="batchDropzone">
+        <input type="file" id="batchFile" accept="image/*" hidden>
+        <span class="dz-label">Click to add a product photo</span>
+        <span class="dz-filename" id="batchFilename"></span>
+      </label>
+      <div class="status" id="batchStatus"></div>
+      <div class="results" id="batchResults"></div>
+    </div>
+  </section>
+
+
+</main>
+
+<footer class="site-footer">
+  <span>SkinIQ is a portfolio project demonstrating multi-agent ML systems.</span>
+  <span>Not a substitute for professional medical advice.</span>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
