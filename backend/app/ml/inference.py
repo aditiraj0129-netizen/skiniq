@@ -5,6 +5,7 @@ from PIL import Image
 import io
 
 from app.ml.model_def import load_model
+from app.ml.acne_severity_cv import estimate_acne_severity
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 WEIGHTS_PATH = os.path.join(os.path.dirname(__file__), "skiniq_vision_model_v2.pt")
@@ -41,11 +42,16 @@ def analyze_skin_image(image_bytes: bytes) -> dict:
         preds = model(img_tensor)
 
     tone_val = preds["tone"].cpu().item()
-    acne_prob = torch.sigmoid(preds["acne"]).cpu().item()
     dc_prob = torch.sigmoid(preds["darkcircle"]).cpu().item()
     type_probs = torch.softmax(preds["type"].cpu(), dim=-1).squeeze()
     type_pred = TYPE_LABELS[type_probs.argmax().item()]
     type_conf = type_probs.max().item()
+
+    # Acne severity: classical CV blob-counting, NOT the deep model's raw
+    # sigmoid output -- see acne_severity_cv.py for why. The deep model's
+    # binary signal is kept alongside for transparency, not as the primary score.
+    deep_model_acne_signal = torch.sigmoid(preds["acne"]).cpu().item()
+    cv_acne = estimate_acne_severity(image_bytes)
 
     result = {
         "skin_tone_fitzpatrick_estimate": round(tone_val, 2),
@@ -55,8 +61,15 @@ def analyze_skin_image(image_bytes: bytes) -> dict:
         ),
         "skin_type": type_pred,
         "skin_type_confidence": round(type_conf, 2),
-        "acne_probability": round(acne_prob, 2),
-        "acne_confidence_note": "Trained on limited data - treat as indicative only.",
+        "acne_probability": cv_acne["severity_probability"],
+        "acne_severity_label": cv_acne["severity_label"],
+        "acne_spot_count_estimate": cv_acne["blob_count"],
+        "acne_method": cv_acne["method"],
+        "acne_deep_model_raw_signal": round(deep_model_acne_signal, 2),
+        "acne_confidence_note": (
+            "Severity is estimated via spot-counting (classical computer vision), "
+            "calibrated to be graduated rather than a single trained-on-limited-data score."
+        ),
         "darkcircle_probability": round(dc_prob, 2),
         "darkcircle_confidence_note": "Trained on limited data - treat as indicative only.",
         "disclaimer": (

@@ -26,6 +26,7 @@
   <button class="tab" data-tab="product">02 &nbsp;Product Scan</button>
   <button class="tab" data-tab="recommend">03 &nbsp;Recommendations</button>
   <button class="tab" data-tab="symptom">04 &nbsp;Symptom Check</button>
+  <button class="tab" data-tab="chatbot">05 &nbsp;Ask SkinIQ</button>
 </nav>
 
 <main class="app-main">
@@ -172,7 +173,6 @@
         <label>Recent products used (comma-separated, optional)</label>
         <input type="text" id="symProducts" placeholder="e.g. Nivea Shea Smooth Body Lotion">
       </div>
-      <label class="checkbox-row">
       <div class="field">
         <label>Your skin type (optional — enables a proactive avoidance list)</label>
         <select id="symSkinType">
@@ -212,6 +212,24 @@
     </div>
   </section>
 
+
+  <!-- CHATBOT -->
+  <section id="chatbot" class="panel">
+    <div class="panel-head">
+      <span class="eyebrow">Chat Agent — powered by Groq</span>
+      <h1>Ask SkinIQ anything skincare</h1>
+      <p class="sub">General questions about oily/dry/normal skin, acne, ingredients, sun care, and everyday routines. Not a replacement for a dermatologist.</p>
+    </div>
+
+    <div class="card">
+      <div id="chatMessages" style="display:flex; flex-direction:column; gap:12px; max-height:420px; overflow-y:auto; margin-bottom:16px; padding-right:4px;"></div>
+      <div style="display:flex; gap:10px;">
+        <input type="text" id="chatInput" placeholder="e.g. how do I deal with oily skin?" style="flex:1; padding:10px 12px; border:1px solid var(--line); border-radius:6px; font-family:var(--font-body); font-size:14px;">
+        <button class="primary-btn" id="chatSend" style="width:auto; padding:10px 22px;">Send</button>
+      </div>
+      <div class="status" id="chatStatus"></div>
+    </div>
+  </section>
 
 </main>
 

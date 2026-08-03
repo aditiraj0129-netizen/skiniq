@@ -83,3 +83,8 @@ app.include_router(recommendations.router, prefix="/api/recommend", tags=["recom
 
 from app.api import symptom_report
 app.include_router(symptom_report.router, prefix="/api/symptom", tags=["symptom-analysis"])
+from app.api import skin_quiz
+app.include_router(skin_quiz.router, prefix="/api/skin", tags=["skin-quiz"])
+
+from app.api import chat
+app.include_router(chat.router, prefix="/api/chat", tags=["chatbot"])

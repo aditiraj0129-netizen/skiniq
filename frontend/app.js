@@ -392,3 +392,53 @@ function renderBatchProductResult(filename, data, skinType) {
   `);
   document.getElementById("batchResults").appendChild(card);
 }
+
+// ============================================
+// CHATBOT
+// ============================================
+let chatHistory = [];
+
+function appendChatBubble(role, text) {
+  const isUser = role === "user";
+  const bubble = el(`
+    <div style="align-self:${isUser ? "flex-end" : "flex-start"}; max-width:75%; background:${isUser ? "var(--gold-pale)" : "var(--paper)"}; border:1px solid var(--line); border-radius:10px; padding:10px 14px; font-size:14px;">
+      ${text}
+    </div>
+  `);
+  document.getElementById("chatMessages").appendChild(bubble);
+  bubble.scrollIntoView({ behavior: "smooth", block: "end" });
+}
+
+async function sendChatMessage() {
+  const input = document.getElementById("chatInput");
+  const message = input.value.trim();
+  if (!message) return;
+
+  appendChatBubble("user", message);
+  input.value = "";
+  setStatus("chatStatus", "Thinking...");
+
+  try {
+    const data = await callApi("/api/chat/ask", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message, history: chatHistory }),
+    });
+
+    if (data.error) {
+      appendChatBubble("assistant", `Sorry — ${data.error}`);
+    } else {
+      appendChatBubble("assistant", data.reply);
+      chatHistory.push({ role: "user", content: message });
+      chatHistory.push({ role: "assistant", content: data.reply });
+    }
+    setStatus("chatStatus", "");
+  } catch (e) {
+    setStatus("chatStatus", e.message, true);
+  }
+}
+
+document.getElementById("chatSend").addEventListener("click", sendChatMessage);
+document.getElementById("chatInput").addEventListener("keydown", (e) => {
+  if (e.key === "Enter") sendChatMessage();
+});
