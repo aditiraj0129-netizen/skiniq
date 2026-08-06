@@ -1,43 +1,44 @@
-# SkinIQ
+# SkinIQ 
 
 A multi-agent AI system for skin health guidance — built to be genuinely useful, not just impressive-sounding. Upload a photo, get an honest confidence-scored analysis. Scan a product label, get real ingredient risk data. Describe a symptom, get guidance grounded in weather, product history, and community context — no photo required, ever, for private concerns.
 
 This isn't a single model pretending to do everything. It's six specialized agents that reason about your skin together, cross-check each other, and are honest about what they don't know.
+LIVE DEMO : https://www.linkedin.com/posts/aditi-raj-330459295_hi-im-going-to-show-you-a-project-i-built-ugcPost-7491060975115108352-b8i8/?utm_source=share&utm_medium=member_desktop&rcm=ACoAAEdvk5QBYfJ9UV8Vn-FCLUDidVIViS9HHKY
+
 
 ---
-
-## Why this exists
+ Why this exists
 
 Most AI skincare tools give you one confident-sounding answer. That's the wrong design for anything health-adjacent. SkinIQ is built around a different idea: **show your uncertainty, on purpose.** Every prediction carries a real, statistically calibrated confidence range. When the model isn't sure, it says so — and lets you correct it instead of quietly guessing.
 
 ---
 
-## The agents
+ The agents
 
 | Agent | What it does | Key technique |
 |---|---|---|
-| **Vision Agent** | Estimates skin tone, type, acne likelihood, and dark-circle likelihood from a face photo | Multi-task DINOv2 vision transformer + conformal prediction for calibrated confidence intervals |
-| **OCR + Ingredient Agent** | Reads a product's ingredient label and flags risks | EasyOCR (deep learning OCR) + fuzzy substring matching against a 28,000-name cosmetic ingredient database (EU CosIng) |
-| **Coordinator Agent** | Cross-references the Vision and Ingredient agents' outputs, elevates compounding risks, flags when agents disagree | Rule-based cross-agent reasoning with confidence gating |
-| **Profile Resolver** | Lets users self-report skin tone/type when the model's own confidence is too low to trust | Confidence-threshold-based override logic |
-| **Recommendation Agent** | Matches products to a user's skin profile with a plain-language reason for every suggestion | Content-based filtering (not a black-box score) |
-| **Symptom Agent** | Analyzes a described symptom against weather, UV, recent product history, and community trend data — text only, so private-area concerns never require a photo | Fuzzy keyword-to-cause matching + Open-Meteo weather API + haversine-based local trend aggregation |
+| Vision Agent** | Estimates skin tone, type, acne likelihood, and dark-circle likelihood from a face photo | Multi-task DINOv2 vision transformer + conformal prediction for calibrated confidence intervals |
+| OCR + Ingredient Agent | Reads a product's ingredient label and flags risks | EasyOCR (deep learning OCR) + fuzzy substring matching against a 28,000-name cosmetic ingredient database (EU CosIng) |
+| Coordinator Agent | Cross-references the Vision and Ingredient agents' outputs, elevates compounding risks, flags when agents disagree | Rule-based cross-agent reasoning with confidence gating |
+| Profile Resolver | Lets users self-report skin tone/type when the model's own confidence is too low to trust | Confidence-threshold-based override logic |
+| Recommendation Agent** | Matches products to a user's skin profile with a plain-language reason for every suggestion | Content-based filtering (not a black-box score) |
+| Symptom Agent | Analyzes a described symptom against weather, UV, recent product history, and community trend data — text only, so private-area concerns never require a photo | Fuzzy keyword-to-cause matching + Open-Meteo weather API + haversine-based local trend aggregation |
 
 ---
 
-## What makes this different from a typical portfolio ML project
+What makes this different from a typical portfolio ML project
 
-- **Conformal prediction, not fake confidence.** Every skin-tone estimate ships with a statistically valid interval, calibrated on held-out data — not an invented percentage.
-- **Partial-label multi-task learning.** The vision model is trained across three separate, non-overlapping datasets (Fitzpatrick17k, a Kaggle skin-type set, and a small acne/dark-circle set), each batch only backpropagating through the heads it has ground truth for.
-- **Honest data-scarcity handling.** The acne/dark-circle heads are trained on a genuinely small dataset — the system says so, in the response, rather than pretending otherwise.
-- **A real ingredient reference, not a toy list.** 28,000+ INCI names sourced from the EU's official cosmetic ingredient database, cross-referenced against a curated risk table for comedogenicity and allergen flags.
-- **Privacy-by-design, not privacy-by-policy.** The symptom-reporting endpoint has no image field in its schema at all — private-area concerns can't accidentally require a photo, because the code doesn't allow it.
-- **Gated medical-adjacent content.** OTC suggestions are never returned unless the user explicitly acknowledges they'll confirm with a dermatologist first — enforced server-side, not just a UI nag.
-- **Full audit trail.** Every agent decision is logged to SQL with its confidence and whether it triggered a "debate" — nothing is a black box.
+- Conformal prediction, not fake confidence.** Every skin-tone estimate ships with a statistically valid interval, calibrated on held-out data — not an invented percentage.
+- Partial-label multi-task learning.** The vision model is trained across three separate, non-overlapping datasets (Fitzpatrick17k, a Kaggle skin-type set, and a small acne/dark-circle set), each batch only backpropagating through the heads it has ground truth for.
+- Honest data-scarcity handling.** The acne/dark-circle heads are trained on a genuinely small dataset — the system says so, in the response, rather than pretending otherwise.
+- A real ingredient reference, not a toy list.** 28,000+ INCI names sourced from the EU's official cosmetic ingredient database, cross-referenced against a curated risk table for comedogenicity and allergen flags.
+- Privacy-by-design, not privacy-by-policy.** The symptom-reporting endpoint has no image field in its schema at all — private-area concerns can't accidentally require a photo, because the code doesn't allow it.
+- Gated medical-adjacent content.** OTC suggestions are never returned unless the user explicitly acknowledges they'll confirm with a dermatologist first — enforced server-side, not just a UI nag.
+- Full audit trail.** Every agent decision is logged to SQL with its confidence and whether it triggered a "debate" — nothing is a black box.
 
 ---
 
-## Architecture
+ Architecture
 
 ```
 ┌─────────────┐      ┌──────────────────┐      ┌─────────────────┐
